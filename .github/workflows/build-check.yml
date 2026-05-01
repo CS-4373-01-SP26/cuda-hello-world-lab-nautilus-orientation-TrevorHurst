@@ -29,7 +29,6 @@ jobs:
       with:
         cuda: '12.2.0'
         method: network
-        sub-packages: '["nvcc"]'
 
     - name: Verify nvcc
       run: nvcc --version
