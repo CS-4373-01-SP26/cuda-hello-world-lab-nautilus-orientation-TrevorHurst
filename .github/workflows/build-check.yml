@@ -17,22 +17,25 @@ on:
 jobs:
   build:
     name: nvcc compile check
-    runs-on: ubuntu-latest
+    # Change from ubuntu-latest to ubuntu-22.04
+    runs-on: ubuntu-22.04 
     timeout-minutes: 10
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-
-    - name: Install CUDA toolkit (nvcc only)
+    
+    - name: Install CUDA toolkit
       uses: Jimver/cuda-toolkit@v0.2.35
       with:
         cuda: '12.2.0'
         method: network
+        # Optional: strictly pull nvcc to save time
+        sub-packages: '["nvcc", "cudart-dev"]' 
 
     - name: Verify nvcc
-      run: nvcc --version
-
+      run: |
+        export PATH=/usr/local/cuda-12.2/bin${PATH:+:${PATH}}
+        nvcc --version
     - name: Compile cuda_hello
       run: |
         nvcc -arch=sm_70 -O2 -o /tmp/cuda_hello cuda_hello.cu
